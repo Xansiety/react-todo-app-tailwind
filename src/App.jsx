@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { DragDropContext } from "@hello-pangea/dnd";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import TodoComputed from "./components/TodoComputed";
@@ -8,12 +9,35 @@ import TodoList from "./components/TodoList";
 
 const initialStateTodos = JSON.parse(localStorage.getItem("todos")) || [];
 
+//https://github.com/ymulenll/react-beautiful-dnd-demo/blob/master/src/App.js
+const reorder = (list, startIndex, endIndex) => {
+    const result = [...list];
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+
+    return result;
+};
+
 const App = () => {
     const [todos, setTodos] = useState(initialStateTodos);
 
     useEffect(() => {
         localStorage.setItem("todos", JSON.stringify(todos));
     }, [todos]);
+
+    const handleDragEnd = (result) => {
+        const { destination, source } = result;
+        if (!destination) return;
+        if (
+            source.index === destination.index &&
+            source.droppableId === destination.droppableId
+        )
+            return;
+
+        setTodos((prevTasks) =>
+            reorder(prevTasks, source.index, destination.index)
+        );
+    };
 
     //filtros
     const [filter, setFilter] = useState("all");
@@ -85,11 +109,13 @@ const App = () => {
                     </div>
                 ) : (
                     <>
-                        <TodoList
-                            todos={filteredTodos()}
-                            removeTodo={removeTodo}
-                            updateTitle={updateTitle}
-                        />
+                        <DragDropContext onDragEnd={handleDragEnd}>
+                            <TodoList
+                                todos={filteredTodos()}
+                                removeTodo={removeTodo}
+                                updateTitle={updateTitle}
+                            />
+                        </DragDropContext>
 
                         <TodoComputed
                             computedTodosLeft={computedTodosLeft}
