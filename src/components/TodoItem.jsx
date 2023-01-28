@@ -3,7 +3,7 @@ import IconCross from "./icons/IconCross";
 
 const TodoItem = ({ id, title, completed, removeTodo, updateTitle }) => {
     return (
-        <article className="flex gap-4 border-b border-b-gray-400 dark:bg-gray-800 dark:text-gray-300">
+        <article className="flex gap-4 border-b border-b-gray-40">
             <button
                 onClick={() => updateTitle(id)}
                 className={`h-5 w-5 flex-none border-2 ${
