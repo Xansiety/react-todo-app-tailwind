@@ -1,5 +1,4 @@
-import React from "react";
-
+ 
 const MoonIcon = ({ color = "#fff", ...resto }) => {
     // Se puede recibir un color por props, si no se recibe, se usa el color por defecto
     //className="fill-red-400" 
