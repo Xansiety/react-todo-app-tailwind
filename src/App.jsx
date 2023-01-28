@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import TodoComputed from "./components/TodoComputed";
@@ -6,15 +6,14 @@ import TodoCreate from "./components/TodoCreate";
 import TodoFilter from "./components/TodoFilter";
 import TodoList from "./components/TodoList";
 
-const initialStateTodos = [
-    { id: 1, title: "Complete online JS Course", completed: true },
-    { id: 2, title: "Jog around the park 3x", completed: false },
-    { id: 3, title: "10 minutes meditation", completed: false },
-    { id: 4, title: "Read for 1 hour", completed: true },
-];
+const initialStateTodos = JSON.parse(localStorage.getItem("todos")) || [];
 
 const App = () => {
     const [todos, setTodos] = useState(initialStateTodos);
+
+    useEffect(() => {
+        localStorage.setItem("todos", JSON.stringify(todos));
+    }, [todos]);
 
     //filtros
     const [filter, setFilter] = useState("all");
@@ -67,23 +66,45 @@ const App = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-200  bg-[url('./assets/images/bg-mobile-light.jpg')] bg-contain bg-no-repeat transition-all duration-1000 dark:bg-gray-900 dark:bg-[url('./assets/images/bg-mobile-dark.jpg')] dark:text-gray-300">
+        <div
+            className="min-h-screen bg-gray-200  bg-[url('./assets/images/bg-mobile-light.jpg')] 
+        bg-contain bg-no-repeat transition-all duration-1000 dark:bg-gray-900 
+        dark:bg-[url('./assets/images/bg-mobile-dark.jpg')] dark:text-gray-300 
+        md:bg-[url('./assets/images/bg-desktop-light.jpg')]
+        dark:md:bg-[url('./assets/images/bg-desktop-dark.jpg')]"
+        >
             <Header />
-            <main className="container mx-auto mt-8 px-4">
+            <main className="container mx-auto mt-8 px-4 md:max-w-xl">
                 <TodoCreate createTodo={createTodo} />
-                <TodoList
-                    todos={filteredTodos()}
-                    removeTodo={removeTodo}
-                    updateTitle={updateTitle}
-                />
-                <TodoComputed
-                    computedTodosLeft={computedTodosLeft}
-                    computedTodosCompleted={computedTodosCompleted}
-                    clearCompleted={clearCompleted}
-                />
-                <TodoFilter changeFilter={changeFilter} filter={filter} />
+
+                {todos.length === 0 ? (
+                    <div className="mt-8 rounded-t-md bg-white p-4 text-3xl text-gray-500 transition-all duration-1000 dark:bg-gray-800 dark:text-gray-300 [&>article]:p-4">
+                        <p class="text-center">
+                            No hay tareas por mostrar, por favor añade una 🚀
+                        </p>
+                    </div>
+                ) : (
+                    <>
+                        <TodoList
+                            todos={filteredTodos()}
+                            removeTodo={removeTodo}
+                            updateTitle={updateTitle}
+                        />
+
+                        <TodoComputed
+                            computedTodosLeft={computedTodosLeft}
+                            computedTodosCompleted={computedTodosCompleted}
+                            clearCompleted={clearCompleted}
+                        />
+                        <TodoFilter
+                            changeFilter={changeFilter}
+                            filter={filter}
+                        />
+                    </>
+                )}
             </main>
-            <Footer />
+
+            {todos.length > 0 && <Footer />}
         </div>
     );
 };
