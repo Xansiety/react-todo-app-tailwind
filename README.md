@@ -73,3 +73,11 @@ plugins: [require('prettier-plugin-tailwindcss')],
 ## Extensiones de VSCode recomendadas
 
 - Tailwind CSS IntelliSense
+
+
+## Drag and Drop: 
+https://github.com/hello-pangea/dnd
+https://github.com/hello-pangea/dnd/tree/main/docs/api
+https://www.freecodecamp.org/news/how-to-add-drag-and-drop-in-react-with-react-beautiful-dnd/
+https://es.reactjs.org/docs/forwarding-refs.html
+https://www.youtube.com/watch?v=bZsMWorjtFI
